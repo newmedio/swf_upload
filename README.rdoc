@@ -1,0 +1,75 @@
+= SwfUpload for Rails
+
+This plugin provides for the installation and utilization of SwfUpload v2.2 in Ruby on Rails applications.
+"SWFUpload is a small JavaScript/Flash library to get the best of both worlds. It features the great upload capabilities of Flash and the accessibility and ease of HTML/CSS..."
+
+http://swfupload.org
+
+This plugin includes the progress bar and queue exemplified here: http://demo.swfupload.org/v220/simpledemo/index.php
+
+== Installation
+
+=== Step 1
+
+* script/plugin install git://github.com/newmedio/swf_upload.git
+* piston import git://github.com/newmedio/swf_upload.git vendor/plugins/swf_upload
+* git submodule add git://github.com/newmedio/swf_upload.git vendor/plugins/swf_upload
+* Download the latest files ( http://github.com/newmedio/swf_upload/tarball/master ) and extract to vendor/plugins/swf_upload
+
+=== Step 2
+
+ script/generate swf_upload
+
+=== Step 3
+
+Add the following to the controller of the page you want to respond to swf_upload.
+
+  responds_to_swf_upload :only => :create
+
+Whatever your controller renders in response to a swf_upload request will be used to replace the uploader progress bar for that file. so your action may look like:
+  def create
+    @image = current_user.images.build(:swf_uploaded_data => params[:Filedata])
+
+    unless @image.save
+      render :template => 'images/create_error'
+    end
+  end
+ 
+Then insert the swf_upload_tag in your view where you want the button. 
+
+  <% swf_upload_tag images_url, :button_height => 20, :button_width => 120, :progress_target_id => 'images' do -%>
+    Browse &amp; Upload
+  <% end -%> 
+
+Lastly, add the following line(s) to the <head> element of your application view:
+
+  <%= include_swf_upload %>
+
+Now you're all set!
+
+== Specs
+
+you can run the specs like
+  script/spec vendor/plugins/swf_upload/spec/
+
+you'll need the excelent Hpricot gem.
+
+
+== Reporting an Issue
+
+<brian at newmedio dot com>
+
+Be sure to include Rails version, plugin version, and when possible, a sample application that can reproduce the problem. Upload it to one of the various file hosting sites and link to it in the ticket. Don't include vendored rails or the tiny_mce plugin in the archive (if I know the versions, I'll add these myself).
+
+
+== Contributing
+
+If you've added something, why not share it. Fork the repository (http://github.com/newmedio/swf_upload), make the changes and send a pull request to the maintainers.
+
+Changes with tests, and full documentation are preferred.
+ 
+
+= Credits
+
+Thanks to Kieran Pilkington <kieran@katipo.co.nz> for his fine work on the tiny_mce plugin. It served as a guide for crafting this one.
+Bundled swf_upload version: 3.2.2
