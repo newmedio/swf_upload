@@ -17,14 +17,16 @@ class CGI::Session
   end
 end
 
-class CGI::Session::CookieStore
-  alias original_initialize initialize
-  def initialize(session, options = {})
-    @session_data = options['session_data']
-    original_initialize(session, options)
-  end
+if ActionController::Base.session_store == ActionController::Session::CookieStore
+  class CGI::Session::CookieStore
+    alias original_initialize initialize
+    def initialize(session, options = {})
+      @session_data = options['session_data']
+      original_initialize(session, options)
+    end
 
-  def read_cookie
-    @session_data || @session.cgi.cookies[@cookie_options['name']].first
+    def read_cookie
+      @session_data || @session.cgi.cookies[@cookie_options['name']].first
+    end
   end
 end

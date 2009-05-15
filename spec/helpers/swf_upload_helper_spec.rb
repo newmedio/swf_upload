@@ -64,21 +64,22 @@ describe SwfUploadHelper do
       end
       it "should add a div to hold the place of the button with an id of browse_files by default" do
         out = helper.swf_upload_tag( '/' )
-        div_id(out).should == 'browse_files'
+        out.should have_tag( 'div#browse_files' )
         parse_json_from_output(out)['button_placeholder_id'].should == 'browse_files'
       end
       it "should add a div to hold the place of the button" do
         out = helper.swf_upload_tag( '/', :button_placeholder_id => 'a_button_placeholder' )
-        div_id(out).should == 'a_button_placeholder'
+
+        out.should have_tag( 'div#a_button_placeholder' )
         parse_json_from_output(out)['button_placeholder_id'].should == 'a_button_placeholder'
       end
     end
+
+    describe "button test" do
+    end
+
   end
   def parse_json_from_output(out)
     ActiveSupport::JSON.decode(out.match( /\(.*\((.*?)\)/ )[1].gsub(/\\/,''))
-  end
-
-  def div_id(out)
-    Hpricot(out).at("/div").attributes['id']
   end
 end
