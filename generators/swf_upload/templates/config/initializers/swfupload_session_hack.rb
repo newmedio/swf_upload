@@ -11,13 +11,13 @@ class CGI::Session
       ru[(ru.index("?") + 1)..-1]
     end
     if query_string and query_string.include?(session_key)
-      option['session_data'] = CGI.unescape(query_string.scan(/#{session_key}=(.*?)(&.*?)*$/).flatten.first)
+      option['session_data'] = option['session_id'] = CGI.unescape(query_string.scan(/#{session_key}=(.*?)(&.*?)*$/).flatten.first)
     end
     original_initialize(request, option)
   end
 end
 
-if ActionController::Base.session_store == ActionController::Session::CookieStore
+if ActionController::Base.session_store.to_s.match(/cookie/i)
   class CGI::Session::CookieStore
     alias original_initialize initialize
     def initialize(session, options = {})
