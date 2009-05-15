@@ -76,8 +76,14 @@ describe SwfUploadHelper do
     end
 
     describe "button test" do
+      it "should be the content of the capture" do
+        @session_options.stub!(:session_options => {})
+        out = helper.swf_upload_tag( '/', :button_placeholder_id => 'a_button_placeholder' ) do 
+          "hello?"
+        end
+        parse_json_from_output(out)['button_text'].should == 'hello?'
+      end
     end
-
   end
   def parse_json_from_output(out)
     ActiveSupport::JSON.decode(out.match( /\(.*\((.*?)\)/ )[1].gsub(/\\/,''))

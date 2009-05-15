@@ -17,6 +17,8 @@ module SwfUploadHelper
       options.merge!( :custom_settings => { :progressTarget => progress_target_id } )
     end
 
+    options.merge!( :button_text => capture(&block) ) if block_given?
+
     opts = add_auth_token_if_needed( DEFAULT_OPTIONS.merge( :upload_url => append_session_key(upload_url) ) ).merge(options)
 
     out = content_tag( :div, '',  :id => opts[:button_placeholder_id] ) << update_page_tag do |page|
@@ -24,7 +26,6 @@ module SwfUploadHelper
     end
 
     if block_given? 
-      options.merge!( :button_text => capture(&block) )
       concat( out, block.binding )
     else
       out
