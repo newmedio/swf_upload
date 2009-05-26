@@ -26,7 +26,7 @@ module SwfUploadHelper
     end
 
     if block_given? 
-      concat( out, block.binding )
+      concat out
     else
       out
     end
@@ -34,12 +34,13 @@ module SwfUploadHelper
   private
 
   def append_session_key(url)
-    url + "?#{ u request.session_options[:session_key] || '_session_id' }=#{ u( session.session_id ) }"
+    key = ActionController::Base.session_options[:key]
+    url + "?#{ u key }=#{ u(request.cookies[key]) }"
   end
 
   def add_auth_token_if_needed( options )
     if protect_against_forgery?
-      options.merge( :post_params => { :authenticity_token => u( form_authenticity_token ) } )
+      options.merge( :post_params => { request_forgery_protection_token => escape_javascript( form_authenticity_token ) } )
     else
       options
     end
