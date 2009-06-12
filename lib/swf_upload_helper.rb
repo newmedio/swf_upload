@@ -19,7 +19,7 @@ module SwfUploadHelper
 
     options.merge!( :button_text => capture(&block) ) if block_given?
 
-    opts = add_auth_token_if_needed( DEFAULT_OPTIONS.merge( :upload_url => append_session_key(upload_url) ) ).merge(options)
+    opts = add_auth_token_if_needed( DEFAULT_OPTIONS.merge( :upload_url => append_session_key(upload_url) ) ).deep_merge(options)
 
     out = content_tag( :div, '',  :id => opts[:button_placeholder_id] ) << update_page_tag do |page|
       page.call "SWFUpload.init", "(#{opts.to_json})"
@@ -52,5 +52,5 @@ module SwfUploadHelper
     :custom_settings => { 
       :progressTarget => 'progress_target'
     }
-  }
+  } unless self.const_defined?('DEFAULT_OPTIONS')
 end
